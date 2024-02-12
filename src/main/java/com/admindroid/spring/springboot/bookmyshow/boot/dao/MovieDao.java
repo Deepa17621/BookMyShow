@@ -36,7 +36,7 @@ public class MovieDao
 		return movie;
 	}
 	
-	public Movie updateUser(Movie movie, int movieId)
+	public Movie updateMovie(Movie movie, int movieId)
 	{
 		Movie exMovie=findMovie(movieId);
 		if(exMovie != null)
@@ -46,7 +46,7 @@ public class MovieDao
 		}
 		return null;
 	}
-	public List<Movie> findAllmovies()
+	public List<Movie> findAllMovies()
 	{
 		return movieRepo.findAll();
 	}

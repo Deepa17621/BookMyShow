@@ -14,7 +14,7 @@ public class SeatDao
 {
 	@Autowired
 	SeatRepo seatRepo;
-	public Seat saveMovie(Seat seat)
+	public Seat saveSeat(Seat seat)
 	{
 		return seatRepo.save(seat);
 	}
@@ -46,7 +46,7 @@ public class SeatDao
 		}
 		return null;
 	}
-	public List<Seat> findAllseats()
+	public List<Seat> findAllSeats()
 	{
 		return seatRepo.findAll();
 	}

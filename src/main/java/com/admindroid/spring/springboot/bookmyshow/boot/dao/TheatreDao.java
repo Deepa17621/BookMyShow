@@ -47,7 +47,7 @@ public class TheatreDao
 		}
 		return null;
 	}
-	public List<Theatre> findAlltheatres()
+	public List<Theatre> findAllTheatres()
 	{
 		return theatreRepo.findAll();
 	}

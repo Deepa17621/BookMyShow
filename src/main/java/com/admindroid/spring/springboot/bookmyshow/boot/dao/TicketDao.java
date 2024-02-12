@@ -48,7 +48,7 @@ public class TicketDao
 		}
 		return null;
 	}
-	public List<Ticket> findAlltickets()
+	public List<Ticket> findAllTickets()
 	{
 		return ticketRepo.findAll();
 	}
