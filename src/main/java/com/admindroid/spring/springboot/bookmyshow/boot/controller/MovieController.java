@@ -1,5 +1,7 @@
 package com.admindroid.spring.springboot.bookmyshow.boot.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Movie;
+import com.admindroid.spring.springboot.bookmyshow.boot.entity.Seat;
+import com.admindroid.spring.springboot.bookmyshow.boot.entity.SeatType;
 import com.admindroid.spring.springboot.bookmyshow.boot.service.MovieService;
 import com.admindroid.spring.springboot.bookmyshow.boot.util.ResponseStructure;
 
@@ -43,4 +47,15 @@ public class MovieController
 	{
 		return movieService.updateMovie(movie, movieId);
 	}
+	
+	@PutMapping("assignSeatsToMovies")
+	public  ResponseEntity<ResponseStructure<Movie>> assignSeatsToMovies(@RequestParam int movieId,@RequestBody List<Integer> seatIds) {
+		return movieService.assignSeatsToMovies(movieId, seatIds);
+	}
+	
+	@GetMapping("findSeatAvailability")
+	ResponseEntity<ResponseStructure<List<Seat>>> findSeatAvailability(@RequestParam int movieId,@RequestParam SeatType seatType) {
+		return movieService.findSeatAvailability(movieId, seatType);
+	}
+	
 }

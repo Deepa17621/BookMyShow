@@ -8,8 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.admindroid.spring.springboot.bookmyshow.boot.dao.TheatreDao;
+import com.admindroid.spring.springboot.bookmyshow.boot.entity.Movie;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Theatre;
 import com.admindroid.spring.springboot.bookmyshow.boot.exception.TheatreNotFound;
+import com.admindroid.spring.springboot.bookmyshow.boot.repo.MovieRepo;
+import com.admindroid.spring.springboot.bookmyshow.boot.repo.TheatreRepo;
 import com.admindroid.spring.springboot.bookmyshow.boot.util.ResponseStructure;
 
 @Service
@@ -17,7 +20,10 @@ public class TheatreService
 {
 	@Autowired
 	TheatreDao theatreDao;
-	
+	@Autowired
+	TheatreRepo tRepo;
+	@Autowired
+	MovieRepo mRepo;
 	public ResponseEntity<ResponseStructure<Theatre>> saveTheatre(Theatre theatre)
 	{
 		ResponseStructure<Theatre> structure=new ResponseStructure<Theatre>();
@@ -85,5 +91,19 @@ public class TheatreService
 //		}
 //		throw 
 		
+	}
+	
+	public ResponseEntity<ResponseStructure<Theatre>> assignMoviesToTheatre(int theatreId,List<Integer> movieIds) {
+		Theatre theatre=theatreDao.findTheatre(theatreId);
+		if(theatre != null) {
+		List<Movie> exmovies=mRepo.findAllById(movieIds);
+		theatre.setTheatreMovieList(exmovies);
+		ResponseStructure<Theatre> structure=new ResponseStructure<Theatre>();
+		structure.setMessage("assign movies to theatre success");
+		structure.setStatus(HttpStatus .OK.value());
+		structure.setData(theatreDao.updateTheatre(theatre, theatreId));
+		return new ResponseEntity<ResponseStructure<Theatre>>(structure,HttpStatus.OK);
+		}
+		throw new TheatreNotFound("we can't assign movie to the theatre because, theatre not found for the given id");
 	}
 }

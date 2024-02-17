@@ -1,5 +1,7 @@
 package com.admindroid.spring.springboot.bookmyshow.boot.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,5 +44,10 @@ public class TheatreController
 	public ResponseEntity<ResponseStructure<Theatre>> updateTheatre(@RequestBody Theatre theatre,@RequestParam int theatreId)
 	{
 		return theatreService.updateTheatre(theatre, theatreId);
+	}
+	
+	@PutMapping("assignMoviesToTheatre")
+	public ResponseEntity<ResponseStructure<Theatre>> assignMoviesToTheatre(@RequestParam int theatreId,@RequestBody List<Integer> movieIds) {
+		return theatreService.assignMoviesToTheatre(theatreId, movieIds);
 	}
 }

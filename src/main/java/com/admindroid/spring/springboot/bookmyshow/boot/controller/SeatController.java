@@ -29,7 +29,7 @@ public class SeatController
 		return seatService.saveSeat(seat);
 	}
 	@GetMapping
-	public ResponseEntity<ResponseStructure<Seat>>  findMovie(@RequestParam int seatId)
+	public ResponseEntity<ResponseStructure<Seat>>  findSeat(@RequestParam int seatId)
 	{
 		return seatService.findSeat(seatId);
 	}
@@ -43,4 +43,6 @@ public class SeatController
 	{
 		return seatService.updateSeat(seat, seatId);
 	}
+	
+	
 }

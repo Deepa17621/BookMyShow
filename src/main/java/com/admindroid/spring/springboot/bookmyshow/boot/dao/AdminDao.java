@@ -48,8 +48,14 @@ public class AdminDao
 		}
 		return null;
 	}
-	public List<Admin> findAllAdmins()
-	{
-		return adminRepo.findAll();
-	}
+//	public List<Admin> findAllAdmins()
+//	{
+//		return adminRepo.findAll();
+//	}
+	
+//	public Admin adminLogin(String adminMail)
+//	{
+//		return adminRepo.adminLogin(adminMail);
+//	}
+
 }

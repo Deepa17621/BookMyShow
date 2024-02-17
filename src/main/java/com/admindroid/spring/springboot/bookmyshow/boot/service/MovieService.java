@@ -1,5 +1,6 @@
 package com.admindroid.spring.springboot.bookmyshow.boot.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.admindroid.spring.springboot.bookmyshow.boot.dao.MovieDao;
+import com.admindroid.spring.springboot.bookmyshow.boot.dao.SeatDao;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Movie;
+import com.admindroid.spring.springboot.bookmyshow.boot.entity.Seat;
+import com.admindroid.spring.springboot.bookmyshow.boot.entity.SeatType;
 import com.admindroid.spring.springboot.bookmyshow.boot.exception.MovieNotFound;
+import com.admindroid.spring.springboot.bookmyshow.boot.exception.SeatNotFound;
+import com.admindroid.spring.springboot.bookmyshow.boot.repo.SeatRepo;
 import com.admindroid.spring.springboot.bookmyshow.boot.util.ResponseStructure;
 
 
@@ -19,6 +25,11 @@ public class MovieService
 {
 	@Autowired
 	MovieDao movieDao;
+	
+	@Autowired
+	SeatDao seatDao;
+	@Autowired
+	SeatRepo seatRepo;
 	
 	public ResponseEntity<ResponseStructure<Movie>> saveMovie(Movie movie)
 	{
@@ -87,6 +98,59 @@ public class MovieService
 //		}
 //		throw 
 		
+	}
+	public List<Seat> findSeatsAvailability(int movieId,SeatType seatType) {
+		Movie movie=movieDao.findMovie(movieId);
+		if(movie != null)
+		{
+		List<Seat> seatList=movie.getSeatList();
+		List<Seat> seatsList=new ArrayList<Seat>();
+		for (Seat seat : seatList) {
+			if(seat.isSeatAvailability()==true && seat.getSeatType()==seatType) {
+				seatsList.add(seat);
+			}
+		}
+		return seatsList;
+		}
+		throw new  MovieNotFound("You cannot see the seat availability b'coz movie not found for given id.");
+	}
+	public  ResponseEntity<ResponseStructure<List<Seat>>> findSeatAvailability(int movieId,SeatType seatType) {
+		Movie movie=movieDao.findMovie(movieId);
+		if(movie != null)
+		{
+			List<Seat> seatList=movie.getSeatList();
+			List<Seat> seatsList=new ArrayList<Seat>();
+			for (Seat seat : seatList) {
+				if(seat.isSeatAvailability()==true && seat.getSeatType()==seatType) {
+					seatsList.add(seat);
+				}
+			}
+			ResponseStructure<List<Seat>> structure=new ResponseStructure<List<Seat>>();
+			structure.setMessage("find seat availability found success");
+			structure.setStatus(HttpStatus .FOUND.value());
+			structure.setData(seatsList);
+			return new ResponseEntity<ResponseStructure<List<Seat>>>(structure,HttpStatus.FOUND);
+		}
+		throw new  MovieNotFound("You cannot see the seat availability b'coz movie not found for given id.");
+		
+	}
+	public  ResponseEntity<ResponseStructure<Movie>> assignSeatsToMovies(int movieId,List<Integer> seatIds) {
+		Movie movie=movieDao.findMovie(movieId);
+		if(movie != null) {
+		List<Seat> seats=seatRepo.findAllById(seatIds);
+			if(seats != null) {
+				movie.setSeatList(seats);
+				ResponseStructure<Movie> structure=new ResponseStructure<Movie>();
+				structure.setMessage("assign seats to Movie success");
+				structure.setStatus(HttpStatus .OK.value());
+				structure.setData(movieDao.updateMovie(movie,movie.getMovieId()));
+				return new ResponseEntity<ResponseStructure<Movie>>(structure,HttpStatus.OK);
+			}
+			else {
+				throw new SeatNotFound("we can't assign seats to movies because,seats not found for set of seatids");
+			}
+		}
+		 throw new MovieNotFound("we can't assign seats to movies because,movie not found for the given id");
 	}
 	
 }

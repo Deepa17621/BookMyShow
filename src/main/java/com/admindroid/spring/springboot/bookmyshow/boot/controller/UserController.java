@@ -32,7 +32,7 @@ public class UserController
 		return userService.saveUser(user);
 	}
 	@GetMapping
-	public ResponseEntity<ResponseStructure<UserDto>>  findStudent(@RequestParam int userId)
+	public ResponseEntity<ResponseStructure<UserDto>>  findUser(@RequestParam int userId)
 	{
 		return userService.findUser(userId);
 	}
@@ -45,5 +45,10 @@ public class UserController
 	public ResponseEntity<ResponseStructure<UserDto>> updateUser(@RequestBody User user,@RequestParam int userId)
 	{
 		return userService.updateUser(user, userId);
+	}
+	
+	@GetMapping("userLogin")
+	ResponseEntity<ResponseStructure<UserDto>> findUser(@RequestParam String userEmail,@RequestParam String userPassword){
+		return userService.findByEmail(userEmail, userPassword);
 	}
 }

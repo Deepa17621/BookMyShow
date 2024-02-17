@@ -13,6 +13,7 @@ import com.admindroid.spring.springboot.bookmyshow.boot.dto.UserDto;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.User;
 
 import com.admindroid.spring.springboot.bookmyshow.boot.exception.UserNotFound;
+import com.admindroid.spring.springboot.bookmyshow.boot.repo.UserRepo;
 import com.admindroid.spring.springboot.bookmyshow.boot.util.ResponseStructure;
 
 @Service
@@ -20,6 +21,8 @@ public class UserService
 {
 	@Autowired
 	UserDao userDao;
+	@Autowired
+	UserRepo userRepo;
 	
 	public ResponseEntity<ResponseStructure<UserDto>> saveUser(User user) 
 	{
@@ -51,6 +54,30 @@ public class UserService
 		throw new UserNotFound("User not found for given id "+userId);
 		
 		
+	}
+	
+	//Find by User Email
+	public ResponseEntity<ResponseStructure<UserDto>> findByEmail(String userEmail,String userPassword){
+		UserDto uDto=new UserDto();
+		ModelMapper mapper=new ModelMapper();
+		User user=userDao.findByEmail(userEmail);
+		System.out.println(user);
+		if(user.getUserMail().equals(userEmail)) {
+			if(user.getUserPassword().equals(userPassword)) {
+		mapper.map(user, uDto);
+		ResponseStructure<UserDto> structure=new ResponseStructure<UserDto>();
+		structure.setMessage("User login success");
+		structure.setStatus(HttpStatus .FOUND.value());
+		structure.setData(uDto);
+		return new ResponseEntity<ResponseStructure<UserDto>> (structure,HttpStatus.FOUND);
+			}
+			else {
+				throw new UserNotFound(" your password is wrong please provide correct deteils");
+			}
+		}
+			else {
+				throw new UserNotFound(" your email is wrong please provide correct deteils");
+			}
 	}
 	//Delete Admin Details
 	public ResponseEntity<ResponseStructure<UserDto>> deleteUser(int userId)
@@ -93,6 +120,7 @@ public class UserService
 		
 		throw new UserNotFound("User not found for given id "+userId);
 	}
+//	
 
 	
 	

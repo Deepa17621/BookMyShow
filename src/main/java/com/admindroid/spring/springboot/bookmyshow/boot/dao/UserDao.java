@@ -52,4 +52,8 @@ public class UserDao
 	{
 		return userRepo.findAll();
 	}
+	
+	public User findByEmail(String userEmail) {
+		return userRepo.findByMail(userEmail);
+	}
 }
