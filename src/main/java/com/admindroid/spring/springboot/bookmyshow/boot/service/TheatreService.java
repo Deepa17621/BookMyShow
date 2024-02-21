@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.admindroid.spring.springboot.bookmyshow.boot.dao.TheatreDao;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Movie;
+import com.admindroid.spring.springboot.bookmyshow.boot.entity.Screen;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Theatre;
 import com.admindroid.spring.springboot.bookmyshow.boot.exception.TheatreNotFound;
 import com.admindroid.spring.springboot.bookmyshow.boot.repo.MovieRepo;
+import com.admindroid.spring.springboot.bookmyshow.boot.repo.ScreenRepo;
 import com.admindroid.spring.springboot.bookmyshow.boot.repo.TheatreRepo;
 import com.admindroid.spring.springboot.bookmyshow.boot.util.ResponseStructure;
 
@@ -24,6 +26,8 @@ public class TheatreService
 	TheatreRepo tRepo;
 	@Autowired
 	MovieRepo mRepo;
+	@Autowired
+	ScreenRepo sRepo;
 	public ResponseEntity<ResponseStructure<Theatre>> saveTheatre(Theatre theatre)
 	{
 		ResponseStructure<Theatre> structure=new ResponseStructure<Theatre>();
@@ -93,13 +97,13 @@ public class TheatreService
 		
 	}
 	
-	public ResponseEntity<ResponseStructure<Theatre>> assignMoviesToTheatre(int theatreId,List<Integer> movieIds) {
+	public ResponseEntity<ResponseStructure<Theatre>> assignScreensToTheatre(int theatreId,List<Integer> screenIds) {
 		Theatre theatre=theatreDao.findTheatre(theatreId);
 		if(theatre != null) {
-		List<Movie> exmovies=mRepo.findAllById(movieIds);
-		theatre.setTheatreMovieList(exmovies);
+		List<Screen> exScreens=sRepo.findAllById(screenIds);
+		theatre.setTheatreScreensList(exScreens);
 		ResponseStructure<Theatre> structure=new ResponseStructure<Theatre>();
-		structure.setMessage("assign movies to theatre success");
+		structure.setMessage("assign screen to theatre success");
 		structure.setStatus(HttpStatus .OK.value());
 		structure.setData(theatreDao.updateTheatre(theatre, theatreId));
 		return new ResponseEntity<ResponseStructure<Theatre>>(structure,HttpStatus.OK);
@@ -107,3 +111,4 @@ public class TheatreService
 		throw new TheatreNotFound("we can't assign movie to the theatre because, theatre not found for the given id");
 	}
 }
+	

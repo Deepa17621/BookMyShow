@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.Entity;
@@ -13,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 @Entity
@@ -27,14 +29,17 @@ public class Movie
 	@NotBlank(message = "movie name cannot be blank")
 	@NotBlank(message = "movie name cannot be null")
 	private String movieName;
-	
-	private int totalNoSeats;
+	@Positive
+	private int totalNoSeatsAvailable;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate movieReleaseDate;
+	@DateTimeFormat(pattern = "HH:mm:ss" )
 	private LocalTime movieStartTime;
+	@DateTimeFormat(pattern = "HH:mm:ss" )
 	private LocalTime movieEndTime;
 	@NotBlank(message = "movie language cannot be blank")
 	@NotNull(message = "movie language cannot be null")
 	private String movieLanguage;
 	@OneToMany
-	List<Seat> seatList;
+	private List<Seat> seatList;
 }

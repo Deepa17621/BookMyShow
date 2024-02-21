@@ -38,8 +38,8 @@ public class AdminController
 	}
 	
 	@PutMapping("assignTheatresToAdmin")
-	ResponseEntity<ResponseStructure<AdminDto>> assignTheatresToAdmin(@Valid @RequestParam int adminId,@RequestBody List<Integer> theatreIds){
-		return adminService.assignTheatresToAdmin(adminId, theatreIds);
+	ResponseEntity<ResponseStructure<AdminDto>> assignTheatresToAdmin(@Valid@RequestParam String adminEmail,@RequestParam String adminPassword, @RequestParam int adminId,@RequestBody List<Integer> theatreIds){
+		return adminService.assignTheatresToAdmin(adminEmail, adminPassword,adminId, theatreIds);
 	}
 	
 	@GetMapping

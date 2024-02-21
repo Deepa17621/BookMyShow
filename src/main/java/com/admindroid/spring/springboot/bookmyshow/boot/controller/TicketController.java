@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Payment;
+import com.admindroid.spring.springboot.bookmyshow.boot.entity.PaymentType;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.SeatType;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Ticket;
 import com.admindroid.spring.springboot.bookmyshow.boot.service.TicketService;
@@ -54,7 +55,7 @@ public class TicketController
 	}
 	
 	@PostMapping("bookTicket")
-	ResponseEntity<ResponseStructure<Ticket>> ticketBooking(@RequestParam String userEmail,@RequestParam String userPassword,@RequestParam int movieId,@RequestParam SeatType seatType,@RequestBody List<Integer> seatIds,@RequestParam LocalDate bookingDate,@RequestParam String paymentMethod){
-		return ticketService.ticketBooking(userEmail, userPassword, movieId, seatType, seatIds, bookingDate,paymentMethod);
+	ResponseEntity<ResponseStructure<Ticket>> ticketBooking(@RequestParam String userEmail,@RequestParam String userPassword,@RequestParam int screenId,@RequestParam int movieId,@RequestParam SeatType seatType,@RequestBody List<Integer> seatIds,@RequestParam LocalDate bookingDate,@RequestParam PaymentType paymentType){
+		return ticketService.ticketBooking(userEmail, userPassword, screenId, seatType, seatIds, bookingDate, paymentType);
 	}
 }

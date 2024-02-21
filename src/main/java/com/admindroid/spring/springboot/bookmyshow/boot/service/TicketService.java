@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.admindroid.spring.springboot.bookmyshow.boot.dao.MovieDao;
 import com.admindroid.spring.springboot.bookmyshow.boot.dao.PaymentDao;
+import com.admindroid.spring.springboot.bookmyshow.boot.dao.ScreenDao;
 import com.admindroid.spring.springboot.bookmyshow.boot.dao.SeatDao;
 import com.admindroid.spring.springboot.bookmyshow.boot.dao.TicketDao;
 import com.admindroid.spring.springboot.bookmyshow.boot.dao.UserDao;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Movie;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Payment;
+import com.admindroid.spring.springboot.bookmyshow.boot.entity.PaymentType;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Seat;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.SeatType;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Ticket;
@@ -43,6 +45,8 @@ public class TicketService
 	SeatRepo sRepo;
 	@Autowired
 	PaymentDao pDao;
+	@Autowired
+	ScreenDao screenDao;
 	@Autowired
 	MovieDao mDao;
 	
@@ -128,7 +132,7 @@ public class TicketService
 				if(seatAvail.getSeatId()==integer) {
 					seats.add(seatAvail);
 					Movie movie=mDao.findMovie(movieId);
-					movie.setTotalNoSeats(movie.getTotalNoSeats()-1);
+					movie.setTotalNoSeatsAvailable(movie.getTotalNoSeatsAvailable()-1);
 					mDao.updateMovie(movie, movieId);
 					seatAvail.setSeatAvailability(false);
 					sDao.updateSeat(seatAvail, seatAvail.getSeatId());
@@ -137,7 +141,7 @@ public class TicketService
 		}
 		return seats;
 	}
-	public ResponseEntity<ResponseStructure<Ticket>> ticketBooking(String userEmail,String userPassword,int movieId,SeatType seatType,List<Integer> seatIds,LocalDate bookingDate,String paymentMethod){
+	public ResponseEntity<ResponseStructure<Ticket>> ticketBooking(String userEmail,String userPassword,int movieId,SeatType seatType,List<Integer> seatIds,LocalDate bookingDate,PaymentType paymenType){
 		User user=userLogin(userEmail, userPassword);
 		if(user != null) {
 		Ticket ticket=new Ticket();
@@ -145,7 +149,7 @@ public class TicketService
 		if(availableSeat != null) {
 		List<Seat> bookedSeats=bookSeat(availableSeat, seatIds,movieId);
 		if(!bookedSeats.isEmpty()) {
-		Payment payment= processPayement(bookedSeats,bookingDate,paymentMethod);
+		Payment payment= processPayement(bookedSeats,bookingDate,paymenType);
 		ticket.setBookingDate(bookingDate);
 		Movie movie=mDao.findMovie(movieId);
 		ticket.setMovieId(movieId);
@@ -182,7 +186,7 @@ public class TicketService
 				seat.setSeatAvailability(true);
 				sDao.updateSeat(seat, seat.getSeatId());
 				Movie movie=mDao.findMovie(ticket.getMovieId());
-				movie.setTotalNoSeats(movie.getTotalNoSeats()+1);
+				movie.setTotalNoSeatsAvailable(movie.getTotalNoSeatsAvailable()+1);
 				mDao.updateMovie(movie, ticket.getMovieId());
 			}
 			ticket.setTicketSeats(null);
@@ -212,7 +216,7 @@ public class TicketService
 		}
 		return null;
 	}
-	private Payment processPayement(List<Seat> bookedSeats,LocalDate bookingDate,String paymentMethod) {
+	private Payment processPayement(List<Seat> bookedSeats,LocalDate bookingDate,PaymentType paymentType) {
 		Payment payment=new Payment();
 		long amount=0;
 		for (Seat seat : bookedSeats) {
@@ -227,7 +231,7 @@ public class TicketService
 			}
 		}
 		payment.setPaymentDate(bookingDate);
-		payment.setPaymentMethod(paymentMethod);
+		payment.setPaymentType(paymentType);
 		payment.setPrice(amount);
 		Payment newPayment=pDao.savePayment(payment);
 		return newPayment;

@@ -2,6 +2,7 @@ package com.admindroid.spring.springboot.bookmyshow.boot.entity;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.Entity;
@@ -22,10 +23,11 @@ public class Payment
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int paymentId;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate paymentDate;
 	@Positive
 	private double price;
 	@NotBlank(message = "payment method cannot be blank")
 	@NotNull(message = "payment method cannot be null")
-	private String paymentMethod;
+	private PaymentType paymentType;
 }

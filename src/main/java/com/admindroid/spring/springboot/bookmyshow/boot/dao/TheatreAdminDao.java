@@ -27,6 +27,9 @@ public class TheatreAdminDao
 		}
 		return null;
 	}
+	public TheatreAdmin findByEmail(String theatreAdminEmail) {
+		return theatreAdminRepo.findByEmail(theatreAdminEmail);
+	}
 	
 	public TheatreAdmin deleteTheatreAdmin(int theatreAdminId)
 	{

@@ -46,8 +46,8 @@ public class TheatreController
 		return theatreService.updateTheatre(theatre, theatreId);
 	}
 	
-	@PutMapping("assignMoviesToTheatre")
-	public ResponseEntity<ResponseStructure<Theatre>> assignMoviesToTheatre(@RequestParam int theatreId,@RequestBody List<Integer> movieIds) {
-		return theatreService.assignMoviesToTheatre(theatreId, movieIds);
+	@PutMapping("assignScreensToTheatre")
+	public ResponseEntity<ResponseStructure<Theatre>> assignScreensToTheatre(@RequestParam int theatreId,@RequestBody List<Integer> screenIds) {
+		return theatreService.assignScreensToTheatre(theatreId, screenIds);
 	}
 }

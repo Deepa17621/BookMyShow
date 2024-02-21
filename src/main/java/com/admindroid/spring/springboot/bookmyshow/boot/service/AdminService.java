@@ -14,6 +14,8 @@ import com.admindroid.spring.springboot.bookmyshow.boot.entity.Admin;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Theatre;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.TheatreAdmin;
 import com.admindroid.spring.springboot.bookmyshow.boot.exception.AdminNotFound;
+import com.admindroid.spring.springboot.bookmyshow.boot.exception.EmailWrongException;
+import com.admindroid.spring.springboot.bookmyshow.boot.exception.PasswordWrongException;
 import com.admindroid.spring.springboot.bookmyshow.boot.repo.TheatreRepo;
 import com.admindroid.spring.springboot.bookmyshow.boot.util.ResponseStructure;
 
@@ -45,9 +47,10 @@ public class AdminService
 		Admin admin=adminDao.findAdmin(adminId);
 		AdminDto dto=new AdminDto();
 		ModelMapper mapper=new ModelMapper();
-		mapper.map(admin, dto);
+		
 		if(admin != null)
 		{
+			mapper.map(admin, dto);
 			structure.setMessage("Admin found........");
 			structure.setStatus(HttpStatus.FOUND.value());
 			structure.setData(dto);
@@ -105,7 +108,10 @@ public class AdminService
 //		}
 //		else return null;
 	}
-	public ResponseEntity<ResponseStructure<AdminDto>> assignTheatresToAdmin(int adminId,List<Integer> theatreIds){
+	public ResponseEntity<ResponseStructure<AdminDto>> assignTheatresToAdmin(String adminEmail,String adminPassword,int adminId,List<Integer> theatreIds)
+	{
+		Admin ladmin=adminLogin(adminEmail, adminPassword);
+		if(ladmin !=null) {
 		AdminDto aDto=new AdminDto();
 		ModelMapper mapper=new ModelMapper();
 		Admin admin=adminDao.findAdmin(adminId);
@@ -120,6 +126,18 @@ public class AdminService
 			return new ResponseEntity<ResponseStructure<AdminDto>>(structure,HttpStatus.OK);
 		}
 		throw new AdminNotFound("we can't assign theatres to Admin because,Admin not found for the given id");
+		}
+		throw new AdminNotFound("admin login required");
+	}
+	public Admin adminLogin(String adminEmail,String adminPassword) {
+		Admin admin=adminDao.findByEmail(adminEmail);
+		if(admin.getAdminMail().equals(adminEmail)) {
+			if(admin.getAdminPassword().equals(adminPassword)) {
+				return admin;
+			}
+			throw new PasswordWrongException("admin password is wrong");
+		}
+		throw new EmailWrongException("admin email is wrong");
 	}
 
 }

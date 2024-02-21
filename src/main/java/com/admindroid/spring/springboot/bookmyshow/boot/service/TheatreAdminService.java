@@ -11,6 +11,8 @@ import com.admindroid.spring.springboot.bookmyshow.boot.dao.TheatreDao;
 import com.admindroid.spring.springboot.bookmyshow.boot.dto.TheatreAdminDto;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.Theatre;
 import com.admindroid.spring.springboot.bookmyshow.boot.entity.TheatreAdmin;
+import com.admindroid.spring.springboot.bookmyshow.boot.exception.EmailWrongException;
+import com.admindroid.spring.springboot.bookmyshow.boot.exception.PasswordWrongException;
 import com.admindroid.spring.springboot.bookmyshow.boot.exception.TheatreAdminNotFound;
 import com.admindroid.spring.springboot.bookmyshow.boot.exception.TheatreNotFound;
 import com.admindroid.spring.springboot.bookmyshow.boot.util.ResponseStructure;
@@ -94,6 +96,24 @@ public class TheatreAdminService
 		
 		throw new TheatreAdminNotFound(" Theatre Admin not found for given id "+theatreAdminId);
 	}
+	public ResponseEntity<ResponseStructure<TheatreAdminDto>> findByEmail(String theatreAdminEmail,String theatreAdminPassword){
+		TheatreAdminDto aDto=new TheatreAdminDto();
+		ModelMapper mapper=new ModelMapper();
+		TheatreAdmin tadmin=theatreAdminDao.findByEmail(theatreAdminEmail);
+		if(tadmin.getTheatreAdminEmail().equals(theatreAdminEmail)) {
+			if(tadmin.getTheatreAdminPassword().equals(theatreAdminPassword)) {
+				mapper.map(tadmin, aDto);
+				ResponseStructure<TheatreAdminDto> structure=new ResponseStructure<TheatreAdminDto>();
+				structure.setData(aDto);
+				structure.setMessage("theatre Admin login success");
+				structure.setStatus(HttpStatus.FOUND.value());
+				return new ResponseEntity<ResponseStructure<TheatreAdminDto>>(structure,HttpStatus.FOUND);
+			}
+			throw new PasswordWrongException("theatre Admin Password is wrong");
+		}
+		throw new EmailWrongException("theatre admin email is wrong");
+	}
+
 	
 	public ResponseEntity<ResponseStructure<TheatreAdminDto>> assignTheatreToTheatreAdmin(int theatreAdminId,int theatreId){
 		TheatreAdminDto taDto=new TheatreAdminDto();

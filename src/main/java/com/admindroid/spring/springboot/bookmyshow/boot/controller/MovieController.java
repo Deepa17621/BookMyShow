@@ -53,6 +53,11 @@ public class MovieController
 		return movieService.assignSeatsToMovies(movieId, seatIds);
 	}
 	
+	@GetMapping("findAllMovie")
+	ResponseEntity<ResponseStructure<List<Movie>>> findAllMovie(){
+		return movieService.findAllMovie();
+	}
+	
 	@GetMapping("findSeatAvailability")
 	ResponseEntity<ResponseStructure<List<Seat>>> findSeatAvailability(@RequestParam int movieId,@RequestParam SeatType seatType) {
 		return movieService.findSeatAvailability(movieId, seatType);

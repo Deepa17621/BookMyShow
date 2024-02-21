@@ -97,7 +97,32 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler
 		structure.setMessage("Theatre Admin Does not exist");
 		return new ResponseEntity<ResponseStructure<String>>(structure, HttpStatus.NOT_FOUND);
 	}
+	@org.springframework.web.bind.annotation.ExceptionHandler
+	public ResponseEntity<ResponseStructure<String>> ScreenNotFoundException1( ScreenNotFound ex){
+		ResponseStructure<String> structure=new ResponseStructure<String>();
+		structure.setData(ex.getMessage());
+		structure.setMessage(" Screen does not exist");
+		structure.setStatus(HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.NOT_FOUND);
+	}
 	
+	@org.springframework.web.bind.annotation.ExceptionHandler
+	public ResponseEntity<ResponseStructure<String>> PasswordWrongException(PasswordWrongException ex){
+		ResponseStructure<String> structure=new ResponseStructure<String>();
+		structure.setData(ex.getMessage());
+		structure.setMessage("please provide proper credentials");
+		structure.setStatus(HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.NOT_FOUND);
+	}
+	
+	@org.springframework.web.bind.annotation.ExceptionHandler
+	public ResponseEntity<ResponseStructure<String>> EmailWrongException(EmailWrongException ex){
+		ResponseStructure<String> structure=new ResponseStructure<String>();
+		structure.setData(ex.getMessage());
+		structure.setMessage("please provide proper credentials");
+		structure.setStatus(HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.NOT_FOUND);
+	}
 	@org.springframework.web.bind.annotation.ExceptionHandler
 	public ResponseEntity<ResponseStructure<Object>> constraintViolationException(ConstraintViolationException ex){
 		ResponseStructure<Object> structure=new ResponseStructure<Object>();
